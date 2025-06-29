@@ -26,16 +26,16 @@ export class QRCodeService {
         }
     }
 
-    async generateQRCodeForDelivery(deliveryId) {
-        try {
-            const delivery = await Delivery.findById(deliveryId);
-            if (!delivery) {
-                throw new Error('Delivery not found');
-            }
+    // async generateQRCodeForDelivery(deliveryId) {
+    //     try {
+    //         const delivery = await Delivery.findById(deliveryId);
+    //         if (!delivery) {
+    //             throw new Error('Delivery not found');
+    //         }
 
-            return await this.generateQRCode(delivery.trackingNumber);
-        } catch (error) {
-            throw new Error(`Failed to generate QR code for delivery: ${error.message}`);
-        }
-    }
+    //         return await this.generateQRCode(delivery.trackingNumber);
+    //     } catch (error) {
+    //         throw new Error(`Failed to generate QR code for delivery: ${error.message}`);
+    //     }
+    // }
 }

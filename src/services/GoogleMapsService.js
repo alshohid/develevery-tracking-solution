@@ -19,8 +19,11 @@ export class GoogleMapsService {
                 }
             });
 
-            const duration = response.data.rows[0].elements[0].duration_in_traffic?.value ||
-                           response.data.rows[0].elements[0].duration.value;
+            const durationElement = response.data.rows[0]?.elements[0];
+            if (!durationElement || (!durationElement.duration && !durationElement.duration_in_traffic)) {
+                throw new Error('Could not retrieve duration from Google Maps API response');
+            }
+            const duration = durationElement.duration_in_traffic?.value || durationElement.duration?.value;
 
             // Add buffer time (30 minutes) for pickup and delivery
             const estimatedSeconds = duration + (30 * 60);
@@ -32,45 +35,45 @@ export class GoogleMapsService {
         }
     }
 
-    async getOptimizedRoute(waypoints) {
-        try {
-            const response = await this.client.directions({
-                params: {
-                    origin: waypoints[0],
-                    destination: waypoints[waypoints.length - 1],
-                    waypoints: waypoints.slice(1, -1),
-                    optimize: true,
-                    key: this.apiKey
-                }
-            });
+    // async getOptimizedRoute(waypoints) {
+    //     try {
+    //         const response = await this.client.directions({
+    //             params: {
+    //                 origin: waypoints[0],
+    //                 destination: waypoints[waypoints.length - 1],
+    //                 waypoints: waypoints.slice(1, -1),
+    //                 optimize: true,
+    //                 key: this.apiKey
+    //             }
+    //         });
 
-            return response.data;
-        } catch (error) {
-            throw new Error(`Route optimization error: ${error.message}`);
-        }
-    }
+    //         return response.data;
+    //     } catch (error) {
+    //         throw new Error(`Route optimization error: ${error.message}`);
+    //     }
+    // }
 
-    async geocodeAddress(address) {
-        try {
-            const response = await this.client.geocode({
-                params: {
-                    address,
-                    key: this.apiKey
-                }
-            });
+    // async geocodeAddress(address) {
+    //     try {
+    //         const response = await this.client.geocode({
+    //             params: {
+    //                 address,
+    //                 key: this.apiKey
+    //             }
+    //         });
 
-            if (response.data.results.length === 0) {
-                throw new Error('Address not found');
-            }
+    //         if (response.data.results.length === 0) {
+    //             throw new Error('Address not found');
+    //         }
 
-            const location = response.data.results[0].geometry.location;
-            return {
-                lat: location.lat,
-                lng: location.lng,
-                formatted_address: response.data.results[0].formatted_address
-            };
-        } catch (error) {
-            throw new Error(`Geocoding error: ${error.message}`);
-        }
-    }
+    //         const location = response.data.results[0].geometry.location;
+    //         return {
+    //             lat: location.lat,
+    //             lng: location.lng,
+    //             formatted_address: response.data.results[0].formatted_address
+    //         };
+    //     } catch (error) {
+    //         throw new Error(`Geocoding error: ${error.message}`);
+    //     }
+    // }
 }

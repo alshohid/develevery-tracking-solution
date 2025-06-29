@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import { User } from '../models/User.js';
+import { User } from '../modules/user/user.model.js';
 
 export class NotificationService {
     constructor() {

@@ -1,4 +1,3 @@
-
 import express from 'express';
 import { deliveryRoutes } from './delivery.route.js';
 
@@ -10,7 +9,7 @@ const router = express.Router();
 router.use('/deliveries', deliveryRoutes);
 
 
-// Health check route
+
 router.get('/health', (req, res) => {
     res.json({
         success: true,
@@ -19,3 +18,5 @@ router.get('/health', (req, res) => {
         version: '1.0.0'
     });
 });
+
+export default router;
